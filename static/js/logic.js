@@ -234,16 +234,7 @@ function styleInfo(feature) {
 };
 
 
-//Tectonic Plate Data
-var plates = d3.json(geoJsonPlate).then(function (data) {
-  console.log(data) ;
 
-  L.geoJson(data,  {color: "#FF1493"}) ;
-  // #FFA500
-
-});
-
-var plateLayer = L.layerGroup(plates) ;
 
 
 
@@ -263,7 +254,8 @@ d3.json(geoJsonQuake).then(function (data) {
       layer.bindPopup("Magnitude: " + feature.properties.mag + "<br> + Location: " + feature.properties.place);
     }
 
-  }).addTo(myMap);
+  }).addTo(quakeLayer);
+quakeLayer.addTo(myMap) ;
 
   //legend
   var legend = L.control({
@@ -297,7 +289,26 @@ d3.json(geoJsonQuake).then(function (data) {
 
   legend.addTo(myMap);
 
+
+      //Tectonic Plate Data
+    d3.json(geoJsonPlate).then(function (data) {
+      console.log(data) ;
+
+      L.geoJson(data,  {color: "#FF1493"}).addTo(plateLayer) ;
+      // #FFA500
+      plateLayer.addTo(myMap) ;
+
+    });
+
 });
+
+
+
+
+
+
+
+
 
 //Add basemap options
 var TerrainBackground = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.{ext}', {
@@ -332,10 +343,17 @@ var baseMaps =
 };
 
 
+var quakeLayer = new L.LayerGroup() ;
+
+var plateLayer = new L.LayerGroup() ;
+
+
+
+
 var overlayMaps = 
     {
         "Tectonic Plates" : plateLayer,
-        // "Earthquakes" : quakeLayer
+        Earthquakes : quakeLayer
 
     } ;
 
