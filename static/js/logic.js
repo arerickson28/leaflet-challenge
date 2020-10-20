@@ -1,177 +1,14 @@
-
-//Tectonic plates layer group 
-//read in geojson
+//Earchquake and Tectonic plate data sources
 var platelink = "static/data/plates.geojson";
 var quakelink = "static/data/earthquake.geojson";
 
 var geoJsonQuake = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-
 var geoJsonPlate = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json";
 
-
+//Log something in console to test
 console.log("logic.js");
 
-
-
-// plateLayer = L.layerGroup(L.geoJson(d3.json(platelink)) );
-
-
-
-// var quakeData = []
-
-// d3.json(quakelink).then(function(data)
-//   { 
-//       var quakeLayer = L.layerGroup();
-
-//       for (var i = 0; i < data.length; i++)
-//           {
-//             coordinates = data.features[i].geometry.coordinates
-//             console.log(coordinates)
-//             quakeData.push(coordinates)
-
-//           }
-
-//   }) ;
-
-
-
-// // Grab the data with d3
-// d3.json(url).then(function(response) {
-
-//   // Create a new marker cluster group
-//   var markers = L.markerClusterGroup();
-
-//   // Loop through data
-//   for (var i = 0; i < response.length; i++) {
-
-//     // Set the data location property to a variable
-//     var location = response[i].location;
-
-//     // Check for location property
-//     if (location) {
-
-//       // Add a new marker to the cluster group and bind a pop-up
-//       markers.addLayer(L.marker([location.coordinates[1], location.coordinates[0]])
-//         .bindPopup(response[i].descriptor));
-//     }
-
-//   }
-
-
-
-
-
-
-
-
-// {
-//   for (var i = 0; i < data.lentgh; i++)
-//     {
-//       quakeData.push(feature[i].geometry.coordinates)
-
-//     } ;
-
-
-
-// }) ;  
-
-
-
-// function createFeatures(earthquakeData) 
-//   {
-//     function onEachFeature(feature, layer) {
-//       feature.geometry.coordinates 
-
-//   } ;
-
-
-
-
-
-
-
-// // d3.json(quakelink, function(data) {
-// //   // Once we get a response, send the data.features object to the createFeatures function
-// //   createFeatures(data.features);
-// // });
-
-// function createFeatures(earthquakeData) {
-
-//   // Define a function we want to run once for each feature in the features array
-//   // Give each feature a popup describing the place and time of the earthquake
-//   function onEachFeature(feature, layer) {
-//       feature.geometry.coordinates 
-
-//       for (var i = 0; i < locations.length; i++) {
-//         // Setting the marker radius for the state by passing population into the markerSize function
-//         stateMarkers.push(
-//           L.circle(locations[i].coordinates, {
-//             stroke: false,
-//             fillOpacity: 0.75,
-//             color: "white",
-//             fillColor: "white",
-//             radius: markerSize(locations[i].state.population)
-//           })
-//         );
-
-//     layer.bindPopup("<h3>" + feature.properties.place +
-//       "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
-// //   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// d3.json(platelink, function plateJson(data) 
-//   {
-//     L.geoJson(data, {color: "#FFA500", weight: 4, fillOpacity: 0})
-//     .addTo(plateLayer) ;
-
-//   }) ;
-
-// var plates = d3.json(platelink).then(function(data) {
-//   // Create a GeoJSON layer with the retrieved data
-
-//   plateLayer = L.layerGroup()
-
-
-//   L.geoJson(data).addTo(plateLayer);
-
-
-// });
-
-
-// function plateJson(data)
-// {
-//     L.geoJson(data).addTo(myMap) ;
-
-// } ;
-
-// var platelink = "static/data/plates.geojson";
-
-// plateLayerGroup = L.layerGroup(d3.json(platelink).then(plateJson))
-
-
-//Earthquake layer group
-//read in geoJson----specify features needed (magnitude, and three cooderinates--lat, long, depth)
-//bind markers that are varied in size based on corresponding matnitude
-
-
-
-
-
-
-//create base layers
-
+//create base layer
 var initialLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
   tileSize: 512,
@@ -180,7 +17,6 @@ var initialLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/
   id: "mapbox/streets-v11",
   accessToken: API_KEY
 });
-
 
 //Define map object
 var myMap = L.map("mapid", {
@@ -191,21 +27,24 @@ var myMap = L.map("mapid", {
 initialLayer.addTo(myMap);
 
 //Function to determine radius of earthquake marker based on earthquake magnitude
-function quakeRadius(magnitude) {
+function quakeRadius(magnitude) 
+{
 
-  if (magnitude == 0) {
-    return 1
-  };
+  if (magnitude == 0) 
+    {
+      return 1
+    };
 
   return magnitude * 4;
 
 };
 
+// Function to determine the color of the earthquake based on its magnitude
+function chooseColor(magnitude) 
+{
 
-
-// Function that will determine the color of a neighborhood based on the borough it belongs to
-function chooseColor(magnitude) {
-  switch (true) {
+  switch (true) 
+  {
     case magnitude > 5:
       return "red";
     case magnitude > 4:
@@ -219,9 +58,12 @@ function chooseColor(magnitude) {
     default:
       return "purple";
   }
+
 };
 
-function styleInfo(feature) {
+//Function to format circle marker for each earthquake
+function styleInfo(feature) 
+{
   return {
     opacity: 1,
     fillOpacity: 0.75,
@@ -233,18 +75,18 @@ function styleInfo(feature) {
   }
 };
 
-
-
-
+//Creating layer groups for control chekcboxes
+var quakeLayer = new L.LayerGroup() ;
+var plateLayer = new L.LayerGroup() ;
 
 
 //Earthquake Data
-d3.json(geoJsonQuake).then(function (data) {
+d3.json(geoJsonQuake).then(function (data) 
+{
 
   console.log(data);
 
   //Add geoJson layer
-
   L.geoJson(data, {
     pointToLayer: function (feature, latlng) {
       return L.circleMarker(latlng);
@@ -255,59 +97,57 @@ d3.json(geoJsonQuake).then(function (data) {
     }
 
   }).addTo(quakeLayer);
-quakeLayer.addTo(myMap) ;
 
-  //legend
-  var legend = L.control({
-    position: "bottomright",
+  //Add earthquake layer to map
+  quakeLayer.addTo(myMap) ;
 
-  });
+  //Place legend
+  var legend = L.control({position: "bottomright"});
 
-  legend.onAdd = function () {
-    // Then add all the details for the legend
-    var div = L.DomUtil.create("div", "info legend");
-    var grades = [0, 1, 2, 3, 4, 5];
-    var colors =
-      [
-        "purple",
-        "blue",
-        "green",
-        "yellow",
-        "orange",
-        "red"
-      ];
+  legend.onAdd = function() 
+  {
+        //Add legend details
+        var div = L.DomUtil.create("div", "info legend");
+        var grades = [0, 1, 2, 3, 4, 5];
+        var colors =
+          [
+            "purple",
+            "blue",
+            "green",
+            "yellow",
+            "orange",
+            "red"
+          ];
 
-    // Looping through our intervals to generate a label with a colored square for each interval.
-    for (var i = 0; i < grades.length; i++) {
-      div.innerHTML +=
-        "<i style='background: " + colors[i] + "'></i> " +
-        grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
-    }
-    return div;
+        // Looping through our intervals to generate a label with a colored square for each interval.
+        for (var i = 0; i < grades.length; i++) 
+        {
+          div.innerHTML +=
+            "<i style='background: " + colors[i] + "'></i> " +
+            grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+        }
+        
+        return div;
 
   };
 
+  //Add legend to map
   legend.addTo(myMap);
-
-
-      //Tectonic Plate Data
-    d3.json(geoJsonPlate).then(function (data) {
-      console.log(data) ;
-
-      L.geoJson(data,  {color: "#FF1493"}).addTo(plateLayer) ;
-      // #FFA500
-      plateLayer.addTo(myMap) ;
-
-    });
 
 });
 
 
 
+//Tectonic Plate Data
+d3.json(geoJsonPlate).then(function (data) 
+  {
+    console.log(data) ;
 
+    L.geoJson(data,  {color: "#FF1493"}).addTo(plateLayer) ;
+    // #FFA500
+    plateLayer.addTo(myMap) ;
 
-
-
+  });
 
 
 //Add basemap options
@@ -333,6 +173,7 @@ var WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/serv
   attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 });
 
+//Create basemaps for control
 var baseMaps =
 {
   Country: initialLayer,
@@ -342,30 +183,16 @@ var baseMaps =
   Satellite: WorldImagery
 };
 
-
-var quakeLayer = new L.LayerGroup() ;
-
-var plateLayer = new L.LayerGroup() ;
-
-
-
-
+//Create overlaymaps for control
 var overlayMaps = 
     {
         "Tectonic Plates" : plateLayer,
         Earthquakes : quakeLayer
-
     } ;
 
 
-// //Earthquake layer group
-// //read in geoJson----specify features needed (magnitude, and three cooderinates--lat, long, depth)
-// //bind markers that are varied in size based on corresponding matnitude
-
-
-
-//   // Pass our map layers into our layer control
-// // Add the layer control to the map
+// Pass our map layers into our layer control
+// Add the layer control to the map
 L.control.layers(baseMaps, overlayMaps, {
   collapsed: false
 }).addTo(myMap);

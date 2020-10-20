@@ -9,8 +9,7 @@ body {
     height: 100%;
   }
 
-
-
+/* Styling from leaflet documentation */
   .info {
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
@@ -23,7 +22,6 @@ body {
     margin: 0 0 5px;
     color: #777;
 }
-
 
   .legend {
     line-height: 30px;
